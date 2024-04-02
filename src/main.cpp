@@ -6,14 +6,14 @@
 #define FILE_EXT ".tga"               // Image file extension
 #define INPUT_PATH "../data/input/"   // Relative path to input files
 #define TEST_PATH "../data/tests/"    // Relative path to test files
-#define OUTPUT_PATH "../data/output/" // Relative path to output files
+#define OUTPUT_PATH "../data/output/" // Relative path to output directory
 
 /// @return `true` if the images are identical (all pixel values are the same); `false` otherwise
 bool testCase(Image &test, Image &example);
 
 int main()
 {
-    std::cout << "Loading Files... ";
+    std::cout << "Loading Input Files... ";
     Image layer1{INPUT_PATH + std::string{"layer1"} + FILE_EXT};
     Image layer2{INPUT_PATH + std::string{"layer2"} + FILE_EXT};
     Image blue{INPUT_PATH + std::string{"layer_blue"} + FILE_EXT};
@@ -28,38 +28,46 @@ int main()
     std::cout << "Done." << std::endl;
 
     std::cout << "Performing Operations... ";
+    std::vector<Image *> outputs;
 
     // Test 1: Multiply layer1.tga (top) and pattern1.tga (bottom)
     Image output1 = Multiply(layer1, pattern1);
     output1.output(OUTPUT_PATH + std::string{"output1"} + FILE_EXT);
+    outputs.push_back(&output1);
 
     // Test 2: Subtract layer2.tga (top) with car.tga (bottom)
     Image output2 = Subtract(layer2, car);
     output2.output(OUTPUT_PATH + std::string{"output2"} + FILE_EXT);
+    outputs.push_back(&output2);
 
     // Test 3: Multiply layer1.tga (top) and pattern2.tga (bottom)
     //         Screen result with text.tga (top)
     Image suboutput3 = Multiply(layer1, pattern2);
     Image output3 = Screen(text1, suboutput3);
     output3.output(OUTPUT_PATH + std::string{"output3"} + FILE_EXT);
+    outputs.push_back(&output3);
 
     // Test 4: Multiply layer2.tga (top) and circles.tga (bottom)
     //         Subtract result with pattern2.tga (top)
     Image suboutput4 = Multiply(layer2, circles);
     Image output4 = Subtract(pattern2, suboutput4);
     output4.output(OUTPUT_PATH + std::string{"output4"} + FILE_EXT);
+    outputs.push_back(&output4);
 
     // Test 5: Overlay layer1.tga (top) and pattern1.tga (bottom)
     Image output5 = Overlay(layer1, pattern1);
     output5.output(OUTPUT_PATH + std::string{"output5"} + FILE_EXT);
+    outputs.push_back(&output5);
 
     // Test 6: Load car.tga and add 200 to the green channel
     Image output6 = Add(car, 0, 200, 0);
     output6.output(OUTPUT_PATH + std::string{"output6"} + FILE_EXT);
+    outputs.push_back(&output6);
 
     // Test 7: Load car.tga and scale the red channel by 4, the blue channel by 0
     Image output7 = Scale(car, 4, 1, 0);
     output7.output(OUTPUT_PATH + std::string{"output7"} + FILE_EXT);
+    outputs.push_back(&output7);
 
     // Test 8: Load car.tga and write each channel to a separate file
     Image output8_r = ColorRed(car);
@@ -68,19 +76,25 @@ int main()
     output8_r.output(OUTPUT_PATH + std::string{"output8_r"} + FILE_EXT);
     output8_g.output(OUTPUT_PATH + std::string{"output8_g"} + FILE_EXT);
     output8_b.output(OUTPUT_PATH + std::string{"output8_b"} + FILE_EXT);
+    outputs.push_back(&output8_r);
+    outputs.push_back(&output8_g);
+    outputs.push_back(&output8_b);
 
     // Test 9: Combine layer red.tga, green.tga, blue.tga
     Image output9 = Combine(red, green, blue);
     output9.output(OUTPUT_PATH + std::string{"output9"} + FILE_EXT);
+    outputs.push_back(&output9);
 
     // Test 10: Rotate text2.tga
     Image output10 = Rotate(text2);
     output10.output(OUTPUT_PATH + std::string{"output10"} + FILE_EXT);
+    outputs.push_back(&output10);
 
     // Test 11: Create a new file that is the combination of car.tga, circles.tga, pattern1.tga, text.tga
     //          Each source image will be in a quadrant of the final image
     Image output11 = CombineQuadrants(car, circles, pattern1, text1);
     output11.output(OUTPUT_PATH + std::string{"output11"} + FILE_EXT);
+    outputs.push_back(&output11);
 
     std::cout << "Done." << std::endl;
 
@@ -102,14 +116,14 @@ int main()
     std::cout << "Done." << std::endl;
 
     /* ANALYZE TEST CASES */
-    std::cout << "\nPerforming Tests... ";
-    std::vector<Image> outputs = {output1, output2, output3, output4, output5, output6, output7, output8_b, output8_g, output8_r, output9, output10, output11};
-    std::vector<Image> examples = {test1, test2, test3, test4, test5, test6, test7, test8_b, test8_g, test8_r, test9, test10, test11};
+    std::cout << "Performing Tests... ";
+    std::vector<Image *> tests = {&test1, &test2, &test3, &test4, &test5, &test6, &test7,
+                                  &test8_r, &test8_g, &test8_b, &test9, &test10, &test11};
 
     std::string results;
     for (int i = 0; i < outputs.size(); i++)
     {
-        bool passed = testCase(outputs[i], examples[i]);
+        bool passed = testCase(*outputs[i], *tests[i]);
         results += (passed) ? "." : "F";
     }
 
