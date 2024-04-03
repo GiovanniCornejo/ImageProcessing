@@ -9,15 +9,22 @@
 /// @param foreground The foreground image.
 /// @param background The background image.
 /// @return The multiplied image.
-Image multiply(const Image &foreground, const Image &background);
+Image multiplyMode(const Image &foreground, const Image &background);
+
+/// @brief The opposite of multiply. Fore- and background are negatively multiplied
+///        and lighten each other.
+/// @note  The effect can be compared to two slides projected with different projectors onto the same screen.
+/// @param foreground The foreground image.
+/// @param background The background image.
+/// @return The screened image.
+Image screenMode(const Image &foreground, const Image &background);
 
 /// @brief Subtracts the top layer from the bottom layer.
 /// @param topLayer The top layer image.
 /// @param bottomLayer The bottom layer image.
 /// @return The subtracted image.
-Image subtract(const Image &topLayer, const Image &bottomLayer);
+Image subtractMode(const Image &topLayer, const Image &bottomLayer);
 
-Image Screen(Image &topLayer, Image &bottomLayer);
 Image Overlay(Image &topLayer, Image &bottomLayer);
 
 Image Add(Image &topLayer, double r = 1.0, double g = 1.0, double b = 1.0);

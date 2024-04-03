@@ -1,6 +1,6 @@
 #include "imageprocessing.h"
 
-Image multiply(const Image &foreground, const Image &background)
+Image multiplyMode(const Image &foreground, const Image &background)
 {
     Image result = foreground;
 
@@ -24,9 +24,33 @@ Image multiply(const Image &foreground, const Image &background)
     return result;
 }
 
-Image subtract(const Image &topLayer, const Image &bottomLayer)
+Image screenMode(const Image &foreground, const Image &background)
 {
-    Image image = topLayer;
+    Image result = foreground;
+
+    for (int i = 0; i < foreground.pixels.size(); ++i)
+    {
+        const Pixel &currTop = foreground.pixels[i];
+        const Pixel &currBottom = background.pixels[i];
+
+        // Pixel-wise negative multiplication (cast to double to prevent overflow)
+        double r_mult = static_cast<double>(0xFF - currTop.r) * (0xFF - currBottom.r);
+        double g_mult = static_cast<double>(0xFF - currTop.g) * (0xFF - currBottom.g);
+        double b_mult = static_cast<double>(0xFF - currTop.b) * (0xFF - currBottom.b);
+
+        /// Normalize values (add 0.5 to fix rounding issues)
+        result.pixels[i].update(
+            static_cast<unsigned char>(0xFF - r_mult / 0xFF + 0.5),
+            static_cast<unsigned char>(0xFF - g_mult / 0xFF + 0.5),
+            static_cast<unsigned char>(0xFF - b_mult / 0xFF + 0.5));
+    }
+
+    return result;
+}
+
+Image subtractMode(const Image &topLayer, const Image &bottomLayer)
+{
+    Image result = topLayer;
 
     for (int i = 0; i < topLayer.pixels.size(); ++i)
     {
@@ -38,38 +62,10 @@ Image subtract(const Image &topLayer, const Image &bottomLayer)
         unsigned char g_sub = (currBottom.g < currTop.g) ? 0 : currBottom.g - currTop.g;
         unsigned char b_sub = (currBottom.b < currTop.b) ? 0 : currBottom.b - currTop.b;
 
-        image.pixels[i].update(r_sub, g_sub, b_sub);
+        result.pixels[i].update(r_sub, g_sub, b_sub);
     }
 
-    return image;
-}
-
-/**
- * @brief The opposite of multiply. Fore- and background are >>negatively multiplied<<
- * @note C = 1 - (1-A)*(1-B)
- * @param topLayer The top layer image
- * @param bottomLayer The bottom layer image
- * @return Image
- */
-Image Screen(Image &topLayer, Image &bottomLayer)
-{
-    Image image = topLayer;
-    for (int i = 0; i < topLayer.pixels.size(); ++i)
-    {
-        // Get current pixels
-        Pixel currTop = topLayer.pixels.at(i);
-        Pixel currBottom = bottomLayer.pixels.at(i);
-
-        // Negatively multiply values, first convert to doubles to prevent overflow of unsigned char
-        double r_mult = (double)(0xFF - currTop.r) * (0xFF - currBottom.r);
-        double g_mult = (double)(0xFF - currTop.g) * (0xFF - currBottom.g);
-        double b_mult = (double)(0xFF - currTop.b) * (0xFF - currBottom.b);
-
-        // Normalize values by dividing by max unsigned char value (0xFF) and add 0.5f to fix rounding issues
-        image.pixels.at(i).update(0xFF - (r_mult / 0xFF) + 0.5f, 0xFF - (g_mult / 0xFF) + 0.5f, 0xFF - (b_mult / 0xFF) + 0.5f);
-    }
-
-    return image;
+    return result;
 }
 
 /**
