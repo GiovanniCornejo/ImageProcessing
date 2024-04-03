@@ -192,25 +192,19 @@ Image combineChannels(const Image &red, const Image &green, const Image &blue)
     return result;
 }
 
-/**
- * @brief Rotate an image by 180 degrees
- *
- * @param topLayer The top layer image
- * @return Image
- */
-Image Rotate(Image &topLayer)
+Image rotate180(const Image &image)
 {
-    Image image = topLayer;
-    for (int i = topLayer.pixels.size() - 1; i >= 0; i--)
+    Image result = image;
+
+    for (int i = image.pixels.size() - 1; i >= 0; i--)
     {
-        // Get current pixels
-        Pixel currTop = topLayer.pixels.at(i);
+        const Pixel &currTop = image.pixels[i];
 
         // Store pixels backwards (bottom right corner [begin] becomes top left corner [end])
-        image.pixels.at(image.pixels.size() - 1 - i) = currTop;
+        result.pixels[result.pixels.size() - 1 - i] = currTop;
     }
 
-    return image;
+    return result;
 }
 
 /**
@@ -222,35 +216,35 @@ Image Rotate(Image &topLayer)
  * @param fourth The fourth quadrant image (bottom left)
  * @return Image
  */
-Image CombineQuadrants(Image &first, Image &second, Image &third, Image &fourth)
+Image CombineQuadrants(const Image &first, const Image &second, const Image &third, const Image &fourth)
 {
-    Image image = first;
+    Image result = first;
 
     // Update size of image in header and clear the pixels
-    image.header.width *= 2;
-    image.header.height *= 2;
-    image.pixels.clear();
+    result.header.width *= 2;
+    result.header.height *= 2;
+    result.pixels.clear();
 
     // Traverse the width of the image (i == column)
-    for (int i = 0; i < image.header.width; ++i)
+    for (int i = 0; i < result.header.width; ++i)
     {
         // Traverse half the height of the image (j == row)
-        for (int j = 0; j < image.header.height; j++)
+        for (int j = 0; j < result.header.height; j++)
         {
             // If adding fourth quadrant (row is safe, column is safe)
-            if (i < image.header.width / 2 && j < image.header.height / 2)
-                image.pixels.push_back(fourth.pixels.at(j + i * (image.header.width / 2)));
+            if (i < result.header.width / 2 && j < result.header.height / 2)
+                result.pixels.push_back(fourth.pixels.at(j + i * (result.header.width / 2)));
             // If adding first quadrant (row is safe, column must be subtracted for correct access)
-            else if (i >= image.header.width / 2 && j < image.header.height / 2)
-                image.pixels.push_back(first.pixels.at(j + (i - image.header.width / 2) * (image.header.width / 2)));
+            else if (i >= result.header.width / 2 && j < result.header.height / 2)
+                result.pixels.push_back(first.pixels.at(j + (i - result.header.width / 2) * (result.header.width / 2)));
             // If adding second quadrant (row and column must be subtracted for correct access)
-            else if (i >= image.header.width / 2 && j >= image.header.height / 2)
-                image.pixels.push_back(second.pixels.at((j - image.header.height / 2) + (i - image.header.width / 2) * (image.header.width / 2)));
+            else if (i >= result.header.width / 2 && j >= result.header.height / 2)
+                result.pixels.push_back(second.pixels.at((j - result.header.height / 2) + (i - result.header.width / 2) * (result.header.width / 2)));
             // If adding third quadrant (row must be subtracted for correct access, column is safe)
             else
-                image.pixels.push_back(third.pixels.at((j - image.header.height / 2) + i * (image.header.width / 2)));
+                result.pixels.push_back(third.pixels.at((j - result.header.height / 2) + i * (result.header.width / 2)));
         }
     }
 
-    return image;
+    return result;
 }

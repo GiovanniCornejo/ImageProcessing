@@ -74,5 +74,9 @@ Image extractBlue(const Image &image);
 /// @return The combined image.
 Image combineChannels(const Image &red, const Image &green, const Image &blue);
 
-Image Rotate(Image &topLayer);
-Image CombineQuadrants(Image &first, Image &second, Image &third, Image &fourth);
+/// @brief Rotate an image by 180 degrees.
+/// @param image The image to rotate.
+/// @return The rotated image.
+Image rotate180(const Image &image);
+
+Image CombineQuadrants(const Image &first, const Image &second, const Image &third, const Image &fourth);

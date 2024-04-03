@@ -86,7 +86,7 @@ int main()
     outputs.push_back(&output9);
 
     // Test 10: Rotate text2.tga
-    Image output10 = Rotate(text2);
+    Image output10 = rotate180(text2);
     output10.write(OUTPUT_PATH + std::string{"output10"} + FILE_EXT);
     outputs.push_back(&output10);
 
