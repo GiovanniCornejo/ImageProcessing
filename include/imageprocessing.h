@@ -19,13 +19,19 @@ Image multiplyMode(const Image &foreground, const Image &background);
 /// @return The screened image.
 Image screenMode(const Image &foreground, const Image &background);
 
+/// @brief A combination of the modes Multiply and Screen, dependent on the background's tonal value.
+/// @note If the background is darker than 50% gray, the tonal values get multiplied,
+///       otherwise they get screened (and afterwards they are doubled in both cases).
+/// @param foreground The foreground image.
+/// @param background The background image.
+/// @return The overlayed image.
+Image overlayMode(const Image &foreground, const Image &background);
+
 /// @brief Subtracts the top layer from the bottom layer.
 /// @param topLayer The top layer image.
 /// @param bottomLayer The bottom layer image.
 /// @return The subtracted image.
 Image subtractMode(const Image &topLayer, const Image &bottomLayer);
-
-Image Overlay(Image &topLayer, Image &bottomLayer);
 
 Image Add(Image &topLayer, double r = 1.0, double g = 1.0, double b = 1.0);
 Image Scale(Image &topLayer, double r = 1.0, double g = 1.0, double b = 1.0);

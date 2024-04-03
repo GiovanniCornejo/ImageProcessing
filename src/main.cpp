@@ -55,7 +55,7 @@ int main()
     outputs.push_back(&output4);
 
     // Test 5: Overlay layer1.tga (top) and pattern1.tga (bottom)
-    Image output5 = Overlay(layer1, pattern1);
+    Image output5 = overlayMode(layer1, pattern1);
     output5.write(OUTPUT_PATH + std::string{"output5"} + FILE_EXT);
     outputs.push_back(&output5);
 

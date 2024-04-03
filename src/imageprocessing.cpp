@@ -38,11 +38,48 @@ Image screenMode(const Image &foreground, const Image &background)
         double g_mult = static_cast<double>(0xFF - currTop.g) * (0xFF - currBottom.g);
         double b_mult = static_cast<double>(0xFF - currTop.b) * (0xFF - currBottom.b);
 
-        /// Normalize values (add 0.5 to fix rounding issues)
+        // Normalize values (add 0.5 to fix rounding issues)
         result.pixels[i].update(
             static_cast<unsigned char>(0xFF - r_mult / 0xFF + 0.5),
             static_cast<unsigned char>(0xFF - g_mult / 0xFF + 0.5),
             static_cast<unsigned char>(0xFF - b_mult / 0xFF + 0.5));
+    }
+
+    return result;
+}
+
+Image overlayMode(const Image &foreground, const Image &background)
+{
+    Image result = foreground;
+
+    // Lambda function for pixel-wise multiplication
+    auto multiply = [](unsigned char a, double b)
+    {
+        return (2 * a * b) / 0xFF + 0.5;
+    };
+
+    // Lambda function for pixel-wise screen
+    auto screen = [](unsigned char a, double b)
+    {
+        return 0xFF - (2 * (0xFF - a) * (0xFF - b) / 0xFF) + 0.5;
+    };
+
+    for (int i = 0; i < foreground.pixels.size(); ++i)
+    {
+        const Pixel &currTop = foreground.pixels[i];
+        const Pixel &currBottom = background.pixels[i];
+
+        // Get background color components to determine mode applied (cast to double to prevent overflow)
+        double r_back = static_cast<double>(currBottom.r);
+        double g_back = static_cast<double>(currBottom.g);
+        double b_back = static_cast<double>(currBottom.b);
+
+        // Pixel-wise multiplication/screen and normalization
+        double r_overlay = (r_back / 0xFF <= 0.5f) ? multiply(currTop.r, r_back) : screen(currTop.r, r_back);
+        double g_overlay = (g_back / 0xFF <= 0.5f) ? multiply(currTop.g, g_back) : screen(currTop.g, g_back);
+        double b_overlay = (b_back / 0xFF <= 0.5f) ? multiply(currTop.b, b_back) : screen(currTop.b, b_back);
+
+        result.pixels[i].update(r_overlay, g_overlay, b_overlay);
     }
 
     return result;
@@ -66,40 +103,6 @@ Image subtractMode(const Image &topLayer, const Image &bottomLayer)
     }
 
     return result;
-}
-
-/**
- * @brief A combination of the modes Multiply and Screen. If the background is darker than 50% gray,
- * the tonal values get multiplied, otherwise they get >>screened<<. Afterwards they are
- * doubled in both cases
- * @note B ≤ 0.5: C = 2*A*B, B > 0.5: C = 1 - 2*(1-A)*(1-B)
- * @param topLayer
- * @param bottomLayer
- * @return Image
- */
-Image Overlay(Image &topLayer, Image &bottomLayer)
-{
-    Image image = topLayer;
-    for (int i = 0; i < topLayer.pixels.size(); ++i)
-    {
-        // Get current pixels
-        Pixel currTop = topLayer.pixels.at(i);
-        Pixel currBottom = bottomLayer.pixels.at(i);
-
-        // Get background check values
-        double r_check = (double)currBottom.r;
-        double g_check = (double)currBottom.g;
-        double b_check = (double)currBottom.b;
-
-        // Perform multiply or screen depending on background, account for overflow by using doubles and add 0.5f to final result to fix rounding issues
-        //                    If background ≤ 50%:                Multiply                      :                             Screen
-        double r_overlay = (r_check / 0xFF <= 0.5f) ? ((2 * currTop.r * r_check) / 0xFF) + 0.5f : 0xFF - (2 * (0xFF - currTop.r) * (0xFF - r_check) / 0xFF) + 0.5f;
-        double g_overlay = (g_check / 0xFF <= 0.5f) ? ((2 * currTop.g * g_check) / 0xFF) + 0.5f : 0xFF - (2 * (0xFF - currTop.g) * (0xFF - g_check) / 0xFF) + 0.5f;
-        double b_overlay = (b_check / 0xFF <= 0.5f) ? ((2 * currTop.b * b_check) / 0xFF) + 0.5f : 0xFF - (2 * (0xFF - currTop.b) * (0xFF - b_check) / 0xFF) + 0.5f;
-        image.pixels.at(i).update(r_overlay, g_overlay, b_overlay);
-    }
-
-    return image;
 }
 
 /**
