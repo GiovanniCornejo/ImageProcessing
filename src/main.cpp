@@ -92,7 +92,7 @@ int main()
 
     // Test 11: Create a new file that is the combination of car.tga, circles.tga, pattern1.tga, text.tga
     //          Each source image will be in a quadrant of the final image
-    Image output11 = CombineQuadrants(car, circles, pattern1, text1);
+    Image output11 = combineQuadrants(car, circles, pattern1, text1);
     output11.write(OUTPUT_PATH + std::string{"output11"} + FILE_EXT);
     outputs.push_back(&output11);
 

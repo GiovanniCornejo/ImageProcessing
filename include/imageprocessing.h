@@ -79,4 +79,10 @@ Image combineChannels(const Image &red, const Image &green, const Image &blue);
 /// @return The rotated image.
 Image rotate180(const Image &image);
 
-Image CombineQuadrants(const Image &first, const Image &second, const Image &third, const Image &fourth);
+/// @brief Combines four images where each is a quadrant in the final image.
+/// @param first The first quadrant image (top left).
+/// @param second The second quadrant image (top right).
+/// @param third The third quadrant image (bottom right).
+/// @param fourth The fourth quadrant image (bottom left).
+/// @return The combined image.
+Image combineQuadrants(const Image &first, const Image &second, const Image &third, const Image &fourth);

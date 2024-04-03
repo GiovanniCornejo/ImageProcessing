@@ -207,42 +207,32 @@ Image rotate180(const Image &image)
     return result;
 }
 
-/**
- * @brief Combines four images into one where each is a quadrant in the final image
- * @note All images have the same size (width and height)
- * @param first The first quadrant image (top left)
- * @param second The second quadrant image (top right)
- * @param third The third quadrant image (bottom right)
- * @param fourth The fourth quadrant image (bottom left)
- * @return Image
- */
-Image CombineQuadrants(const Image &first, const Image &second, const Image &third, const Image &fourth)
+Image combineQuadrants(const Image &first, const Image &second, const Image &third, const Image &fourth)
 {
     Image result = first;
-
-    // Update size of image in header and clear the pixels
     result.header.width *= 2;
     result.header.height *= 2;
     result.pixels.clear();
+    result.pixels.reserve(result.header.width * result.header.height);
 
-    // Traverse the width of the image (i == column)
+    int halfWidth = result.header.width / 2;
+    int halfHeight = result.header.height / 2;
     for (int i = 0; i < result.header.width; ++i)
     {
-        // Traverse half the height of the image (j == row)
-        for (int j = 0; j < result.header.height; j++)
+        for (int j = 0; j < result.header.height; ++j)
         {
-            // If adding fourth quadrant (row is safe, column is safe)
-            if (i < result.header.width / 2 && j < result.header.height / 2)
-                result.pixels.push_back(fourth.pixels.at(j + i * (result.header.width / 2)));
-            // If adding first quadrant (row is safe, column must be subtracted for correct access)
-            else if (i >= result.header.width / 2 && j < result.header.height / 2)
-                result.pixels.push_back(first.pixels.at(j + (i - result.header.width / 2) * (result.header.width / 2)));
-            // If adding second quadrant (row and column must be subtracted for correct access)
-            else if (i >= result.header.width / 2 && j >= result.header.height / 2)
-                result.pixels.push_back(second.pixels.at((j - result.header.height / 2) + (i - result.header.width / 2) * (result.header.width / 2)));
-            // If adding third quadrant (row must be subtracted for correct access, column is safe)
+            // Fourth quadrant
+            if (i < halfWidth && j < halfHeight)
+                result.pixels.push_back(fourth.pixels[j + i * (halfWidth)]);
+            // First quadrant (column must be subtracted for correct access)
+            else if (i >= halfWidth && j < halfHeight)
+                result.pixels.push_back(first.pixels[j + (i - halfWidth) * (halfWidth)]);
+            // Second quadrant (row and column must be subtracted for correct access)
+            else if (i >= halfWidth && j >= halfHeight)
+                result.pixels.push_back(second.pixels[(j - halfHeight) + (i - halfWidth) * (halfWidth)]);
+            // Third quadrant (row must be subtracted for correct access)
             else
-                result.pixels.push_back(third.pixels.at((j - result.header.height / 2) + i * (result.header.width / 2)));
+                result.pixels.push_back(third.pixels[(j - halfHeight) + i * (halfWidth)]);
         }
     }
 
