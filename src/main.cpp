@@ -146,12 +146,12 @@ bool testCase(Image &test, Image &example)
 {
     for (int i = 0; i < test.pixels.size(); ++i)
     {
-        if (test.pixels.at(i) != example.pixels.at(i))
+        if (test.pixels[i] != example.pixels[i])
         {
-            Pixel testPixel = test.pixels.at(i);
-            Pixel examplePixel = example.pixels.at(i);
-            std::cout << "Error! RGB pixels (" << (int)testPixel.r << ", " << (int)testPixel.g << ", " << (int)testPixel.b << ") != (";
-            std::cout << (int)examplePixel.r << ", " << (int)examplePixel.g << ", " << (int)examplePixel.b << ")" << std::endl;
+            Pixel testPixel = test.pixels[i];
+            Pixel examplePixel = example.pixels[i];
+            std::cout << "Error! RGB pixels (" << testPixel.r << ", " << testPixel.g << ", " << testPixel.b << ") != (";
+            std::cout << examplePixel.r << ", " << examplePixel.g << ", " << examplePixel.b << ")" << std::endl;
             return false;
         }
     }
