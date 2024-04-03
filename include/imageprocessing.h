@@ -67,7 +67,12 @@ Image extractGreen(const Image &image);
 /// @return The blue channel image.
 Image extractBlue(const Image &image);
 
-Image Combine(Image &red, Image &green, Image &blue);
+/// @brief Combine three red, green, and blue channels into one image.
+/// @param red The red channel image.
+/// @param green The green channel image.
+/// @param blue The blue channel image.
+/// @return The combined image.
+Image combineChannels(const Image &red, const Image &green, const Image &blue);
 
 Image Rotate(Image &topLayer);
 Image CombineQuadrants(Image &first, Image &second, Image &third, Image &fourth);

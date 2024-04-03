@@ -146,6 +146,7 @@ Image scale(const Image &image, double r, double g, double b)
 Image extractRed(const Image &image)
 {
     Image result = image;
+
     for (int i = 0; i < image.pixels.size(); ++i)
     {
         const Pixel &currTop = image.pixels[i];
@@ -158,6 +159,7 @@ Image extractRed(const Image &image)
 Image extractGreen(const Image &image)
 {
     Image result = image;
+
     for (int i = 0; i < image.pixels.size(); ++i)
     {
         const Pixel &currTop = image.pixels[i];
@@ -170,6 +172,7 @@ Image extractGreen(const Image &image)
 Image extractBlue(const Image &image)
 {
     Image result = image;
+
     for (int i = 0; i < image.pixels.size(); ++i)
     {
         const Pixel &currTop = image.pixels[i];
@@ -179,20 +182,14 @@ Image extractBlue(const Image &image)
     return result;
 }
 
-/**
- * @brief Combine three R, G, and B channel images into one
- *
- * @param red The red channel image
- * @param green The green channel image
- * @param blue The blue channel image
- * @return Image
- */
-Image Combine(Image &red, Image &green, Image &blue)
+Image combineChannels(const Image &red, const Image &green, const Image &blue)
 {
-    Image image = red;
+    Image result = red;
+
     for (int i = 0; i < red.pixels.size(); ++i)
-        image.pixels.at(i).update(red.pixels.at(i).r, green.pixels.at(i).g, blue.pixels.at(i).b);
-    return image;
+        result.pixels[i].update(red.pixels[i].r, green.pixels[i].g, blue.pixels[i].b);
+
+    return result;
 }
 
 /**

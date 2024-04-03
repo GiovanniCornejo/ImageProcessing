@@ -81,7 +81,7 @@ int main()
     outputs.push_back(&output8_b);
 
     // Test 9: Combine layer red.tga, green.tga, blue.tga
-    Image output9 = Combine(red, green, blue);
+    Image output9 = combineChannels(red, green, blue);
     output9.write(OUTPUT_PATH + std::string{"output9"} + FILE_EXT);
     outputs.push_back(&output9);
 
