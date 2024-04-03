@@ -24,15 +24,10 @@ Image::Image(const std::string &file)
     imageFile.read(&header.imageDescriptor, sizeof(header.imageDescriptor));
 
     // Read in RGB pixel data
+    // Note: The Pixel class has the same order of bytes (BGR) as the .tga file
     int size = header.height * header.width;
-    pixels.reserve(size);
-
-    unsigned char rgb[3];
-    for (int i = 0; i < size; ++i)
-    {
-        imageFile.read(reinterpret_cast<char *>(rgb), sizeof(rgb));
-        pixels.push_back(Pixel{rgb[2], rgb[1], rgb[0]}); // .tga files store RGB bytes in reverse order
-    }
+    pixels.resize(size);
+    imageFile.read(reinterpret_cast<char *>(pixels.data()), size * sizeof(Pixel));
 }
 
 void Image::write(const std::string &file)
@@ -41,8 +36,19 @@ void Image::write(const std::string &file)
     if (!imageFile.is_open())
         throw std::runtime_error("ERROR: File \"" + file + "\" not found.");
 
-    // Write image header information
-    imageFile.write(reinterpret_cast<const char *>(&header), sizeof(header));
+    // Write image header information field by field
+    imageFile.write(&header.idLength, sizeof(header.idLength));
+    imageFile.write(&header.colorMapType, sizeof(header.colorMapType));
+    imageFile.write(&header.dataTypeCode, sizeof(header.dataTypeCode));
+    imageFile.write(reinterpret_cast<const char *>(&header.colorMapOrigin), sizeof(header.colorMapOrigin));
+    imageFile.write(reinterpret_cast<const char *>(&header.colorMapLength), sizeof(header.colorMapLength));
+    imageFile.write(&header.colorMapDepth, sizeof(header.colorMapDepth));
+    imageFile.write(reinterpret_cast<const char *>(&header.xOrigin), sizeof(header.xOrigin));
+    imageFile.write(reinterpret_cast<const char *>(&header.yOrigin), sizeof(header.yOrigin));
+    imageFile.write(reinterpret_cast<const char *>(&header.width), sizeof(header.width));
+    imageFile.write(reinterpret_cast<const char *>(&header.height), sizeof(header.height));
+    imageFile.write(&header.bitsPerPixel, sizeof(header.bitsPerPixel));
+    imageFile.write(&header.imageDescriptor, sizeof(header.imageDescriptor));
 
     // Write pixels
     imageFile.write(reinterpret_cast<const char *>(pixels.data()), pixels.size() * sizeof(Pixel));

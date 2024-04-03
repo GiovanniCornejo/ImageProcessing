@@ -4,7 +4,10 @@
 /// @brief Represents the RGB values of a single pixel in an image.
 struct Pixel
 {
-    unsigned char r, g, b;
+    /// @note The order of fields (b, g, r) is significant as .tga files store RGB bytes in reverse order.
+    unsigned char b; // Blue component of pixel
+    unsigned char g; // Green component of pixel
+    unsigned char r; // Red component of pixel
 
     /// @brief Constructs a Pixel object from the provided RGB values.
     /// @param red The red byte value.

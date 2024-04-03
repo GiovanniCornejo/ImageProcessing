@@ -8,6 +8,7 @@
 #include "pixel.h"
 
 /// @brief Manages the header and pixel data of an image.
+/// @note The files will be 24-bit true color, uncompressed images.
 struct Image
 {
     Header header;             // The header data for the image
