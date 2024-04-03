@@ -42,7 +42,7 @@ void Image::write(const std::string &file)
         throw std::runtime_error("ERROR: File \"" + file + "\" not found.");
 
     // Write image header information
-    imageFile.write(reinterpret_cast<char *>(&header), sizeof(header));
+    imageFile.write(reinterpret_cast<const char *>(&header), sizeof(header));
 
     // Write pixels
     imageFile.write(reinterpret_cast<const char *>(pixels.data()), pixels.size() * sizeof(Pixel));
