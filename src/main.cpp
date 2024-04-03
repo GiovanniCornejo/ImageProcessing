@@ -31,26 +31,26 @@ int main()
     std::vector<Image *> outputs;
 
     // Test 1: Multiply layer1.tga (top) and pattern1.tga (bottom)
-    Image output1 = Multiply(layer1, pattern1);
+    Image output1 = multiply(layer1, pattern1);
     output1.write(OUTPUT_PATH + std::string{"output1"} + FILE_EXT);
     outputs.push_back(&output1);
 
     // Test 2: Subtract layer2.tga (top) with car.tga (bottom)
-    Image output2 = Subtract(layer2, car);
+    Image output2 = subtract(layer2, car);
     output2.write(OUTPUT_PATH + std::string{"output2"} + FILE_EXT);
     outputs.push_back(&output2);
 
     // Test 3: Multiply layer1.tga (top) and pattern2.tga (bottom)
     //         Screen result with text.tga (top)
-    Image suboutput3 = Multiply(layer1, pattern2);
+    Image suboutput3 = multiply(layer1, pattern2);
     Image output3 = Screen(text1, suboutput3);
     output3.write(OUTPUT_PATH + std::string{"output3"} + FILE_EXT);
     outputs.push_back(&output3);
 
     // Test 4: Multiply layer2.tga (top) and circles.tga (bottom)
     //         Subtract result with pattern2.tga (top)
-    Image suboutput4 = Multiply(layer2, circles);
-    Image output4 = Subtract(pattern2, suboutput4);
+    Image suboutput4 = multiply(layer2, circles);
+    Image output4 = subtract(pattern2, suboutput4);
     output4.write(OUTPUT_PATH + std::string{"output4"} + FILE_EXT);
     outputs.push_back(&output4);
 
