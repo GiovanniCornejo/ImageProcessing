@@ -143,36 +143,36 @@ Image scale(const Image &image, double r, double g, double b)
     return result;
 }
 
-Image extractRed(Image &image)
+Image extractRed(const Image &image)
 {
     Image result = image;
     for (int i = 0; i < image.pixels.size(); ++i)
     {
-        Pixel currTop = image.pixels[i];
+        const Pixel &currTop = image.pixels[i];
         result.pixels[i].update(currTop.r, currTop.r, currTop.r);
     }
 
     return result;
 }
 
-Image extractGreen(Image &image)
+Image extractGreen(const Image &image)
 {
     Image result = image;
     for (int i = 0; i < image.pixels.size(); ++i)
     {
-        Pixel currTop = image.pixels[i];
+        const Pixel &currTop = image.pixels[i];
         result.pixels[i].update(currTop.g, currTop.g, currTop.g);
     }
 
     return result;
 }
 
-Image extractBlue(Image &image)
+Image extractBlue(const Image &image)
 {
     Image result = image;
     for (int i = 0; i < image.pixels.size(); ++i)
     {
-        Pixel currTop = image.pixels[i];
+        const Pixel &currTop = image.pixels[i];
         result.pixels[i].update(currTop.b, currTop.b, currTop.b);
     }
 

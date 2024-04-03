@@ -53,19 +53,19 @@ Image scale(const Image &image, double r = 1.0, double g = 1.0, double b = 1.0);
 /// @note Each channel contains the red channel value.
 /// @param image The image.
 /// @return The red channel image.
-Image extractRed(Image &image);
+Image extractRed(const Image &image);
 
 /// @brief Extract the green channel from an image.
 /// @note Each channel contains the green channel value.
 /// @param image The image.
 /// @return The green channel image.
-Image extractGreen(Image &image);
+Image extractGreen(const Image &image);
 
 /// @brief Extract the blue channel from an image.
 /// @note Each channel contains the blue channel value.
 /// @param image The image.
 /// @return The blue channel image.
-Image extractBlue(Image &image);
+Image extractBlue(const Image &image);
 
 Image Combine(Image &red, Image &green, Image &blue);
 
