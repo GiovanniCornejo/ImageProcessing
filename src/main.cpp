@@ -65,14 +65,14 @@ int main()
     outputs.push_back(&output6);
 
     // Test 7: Load car.tga and scale the red channel by 4, the blue channel by 0
-    Image output7 = Scale(car, 4, 1, 0);
+    Image output7 = scale(car, 4, 1, 0);
     output7.write(OUTPUT_PATH + std::string{"output7"} + FILE_EXT);
     outputs.push_back(&output7);
 
     // Test 8: Load car.tga and write each channel to a separate file
-    Image output8_r = ColorRed(car);
-    Image output8_g = ColorGreen(car);
-    Image output8_b = ColorBlue(car);
+    Image output8_r = extractRed(car);
+    Image output8_g = extractGreen(car);
+    Image output8_b = extractBlue(car);
     output8_r.write(OUTPUT_PATH + std::string{"output8_r"} + FILE_EXT);
     output8_g.write(OUTPUT_PATH + std::string{"output8_g"} + FILE_EXT);
     output8_b.write(OUTPUT_PATH + std::string{"output8_b"} + FILE_EXT);

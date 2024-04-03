@@ -105,13 +105,13 @@ Image subtractMode(const Image &topLayer, const Image &bottomLayer)
     return result;
 }
 
-Image add(const Image &topLayer, double r, double g, double b)
+Image add(const Image &image, double r, double g, double b)
 {
-    Image result = topLayer;
+    Image result = image;
 
-    for (int i = 0; i < topLayer.pixels.size(); ++i)
+    for (int i = 0; i < image.pixels.size(); ++i)
     {
-        const Pixel &currTop = topLayer.pixels[i];
+        const Pixel &currTop = image.pixels[i];
 
         // Pixel-wise addition (clamp to 255 to prevent overflow)
         unsigned char r_add = (0xFF - r < currTop.r) ? 0xFF : r + currTop.r;
@@ -124,85 +124,59 @@ Image add(const Image &topLayer, double r, double g, double b)
     return result;
 }
 
-/**
- * @brief Common mathematical multiplication. Multipliy the top layer by the passed in values
- *
- * @param topLayer The top layer image
- * @param r The red channel value
- * @param g The green channel value
- * @param b The blue channel value
- * @return Image
- */
-Image Scale(Image &topLayer, double r, double g, double b)
+Image scale(const Image &image, double r, double g, double b)
 {
-    Image image = topLayer;
-    for (int i = 0; i < topLayer.pixels.size(); ++i)
-    {
-        // Get current pixels
-        Pixel currTop = topLayer.pixels.at(i);
+    Image result = image;
 
-        // Multiply values, if overflow occurs clamp to 255 (product > 255)
-        unsigned char r_mult = (currTop.r * r > 0xFF) ? 0xFF : currTop.r * r;
-        unsigned char g_mult = (currTop.g * g > 0xFF) ? 0xFF : currTop.g * g;
-        unsigned char b_mult = (currTop.b * b > 0xFF) ? 0xFF : currTop.b * b;
-        image.pixels.at(i).update(r_mult, g_mult, b_mult);
+    for (int i = 0; i < image.pixels.size(); ++i)
+    {
+        const Pixel &currTop = image.pixels[i];
+
+        // Pixel-wise scaling (clamp to 255 to prevent overflow)
+        unsigned char r_scale = (currTop.r * r > 0xFF) ? 0xFF : currTop.r * r;
+        unsigned char g_scale = (currTop.g * g > 0xFF) ? 0xFF : currTop.g * g;
+        unsigned char b_scale = (currTop.b * b > 0xFF) ? 0xFF : currTop.b * b;
+
+        result.pixels[i].update(r_scale, g_scale, b_scale);
     }
 
-    return image;
+    return result;
 }
 
-/**
- * @brief Extract the red channel from an image
- *
- * @param topLayer The top layer image
- * @return Image
- */
-Image ColorRed(Image &topLayer)
+Image extractRed(Image &image)
 {
-    Image image = topLayer;
-    for (int i = 0; i < topLayer.pixels.size(); ++i)
+    Image result = image;
+    for (int i = 0; i < image.pixels.size(); ++i)
     {
-        Pixel currTop = topLayer.pixels.at(i);
-        image.pixels.at(i).update(currTop.r, currTop.r, currTop.r);
+        Pixel currTop = image.pixels[i];
+        result.pixels[i].update(currTop.r, currTop.r, currTop.r);
     }
 
-    return image;
+    return result;
 }
 
-/**
- * @brief Extract the blue channel from an image
- *
- * @param topLayer The top layer image
- * @return Image
- */
-Image ColorGreen(Image &topLayer)
+Image extractGreen(Image &image)
 {
-    Image image = topLayer;
-    for (int i = 0; i < topLayer.pixels.size(); ++i)
+    Image result = image;
+    for (int i = 0; i < image.pixels.size(); ++i)
     {
-        Pixel currTop = topLayer.pixels.at(i);
-        image.pixels.at(i).update(currTop.g, currTop.g, currTop.g);
+        Pixel currTop = image.pixels[i];
+        result.pixels[i].update(currTop.g, currTop.g, currTop.g);
     }
 
-    return image;
+    return result;
 }
 
-/**
- * @brief Extract the green channel from an image
- *
- * @param topLayer The top layer image
- * @return Image
- */
-Image ColorBlue(Image &topLayer)
+Image extractBlue(Image &image)
 {
-    Image image = topLayer;
-    for (int i = 0; i < topLayer.pixels.size(); ++i)
+    Image result = image;
+    for (int i = 0; i < image.pixels.size(); ++i)
     {
-        Pixel currTop = topLayer.pixels.at(i);
-        image.pixels.at(i).update(currTop.b, currTop.b, currTop.b);
+        Pixel currTop = image.pixels[i];
+        result.pixels[i].update(currTop.b, currTop.b, currTop.b);
     }
 
-    return image;
+    return result;
 }
 
 /**

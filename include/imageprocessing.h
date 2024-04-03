@@ -33,19 +33,40 @@ Image overlayMode(const Image &foreground, const Image &background);
 /// @return The subtracted image.
 Image subtractMode(const Image &topLayer, const Image &bottomLayer);
 
-/// @brief Common mathematical addition. Add to the top layer the passed in values.
-/// @param topLayer The top layer image.
+/// @brief Common mathematical addition. Add to the image the passed in values.
+/// @param image The image to add to.
 /// @param r The red byte value.
 /// @param g The green byte value.
 /// @param b The blue byte value.
 /// @return The added image.
-Image add(const Image &topLayer, double r = 1.0, double g = 1.0, double b = 1.0);
+Image add(const Image &image, double r = 1.0, double g = 1.0, double b = 1.0);
 
-Image Scale(Image &topLayer, double r = 1.0, double g = 1.0, double b = 1.0);
+/// @brief Common mathematical multiplication. Scale the image by the passed in values.
+/// @param image The image to scale.
+/// @param r The red byte value.
+/// @param g The green byte value.
+/// @param b The blue byte value.
+/// @return The scaled image.
+Image scale(const Image &image, double r = 1.0, double g = 1.0, double b = 1.0);
 
-Image ColorRed(Image &topLayer);
-Image ColorGreen(Image &topLayer);
-Image ColorBlue(Image &topLayer);
+/// @brief Extract the red channel from an image.
+/// @note Each channel contains the red channel value.
+/// @param image The image.
+/// @return The red channel image.
+Image extractRed(Image &image);
+
+/// @brief Extract the green channel from an image.
+/// @note Each channel contains the green channel value.
+/// @param image The image.
+/// @return The green channel image.
+Image extractGreen(Image &image);
+
+/// @brief Extract the blue channel from an image.
+/// @note Each channel contains the blue channel value.
+/// @param image The image.
+/// @return The blue channel image.
+Image extractBlue(Image &image);
+
 Image Combine(Image &red, Image &green, Image &blue);
 
 Image Rotate(Image &topLayer);
