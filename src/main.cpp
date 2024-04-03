@@ -60,7 +60,7 @@ int main()
     outputs.push_back(&output5);
 
     // Test 6: Load car.tga and add 200 to the green channel
-    Image output6 = Add(car, 0, 200, 0);
+    Image output6 = add(car, 0, 200, 0);
     output6.write(OUTPUT_PATH + std::string{"output6"} + FILE_EXT);
     outputs.push_back(&output6);
 

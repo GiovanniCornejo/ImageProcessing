@@ -94,7 +94,7 @@ Image subtractMode(const Image &topLayer, const Image &bottomLayer)
         const Pixel &currTop = topLayer.pixels[i];
         const Pixel &currBottom = bottomLayer.pixels[i];
 
-        // Pixel-wise subtraction, (clamp to 0 to prevent underflow)
+        // Pixel-wise subtraction (clamp to 0 to prevent underflow)
         unsigned char r_sub = (currBottom.r < currTop.r) ? 0 : currBottom.r - currTop.r;
         unsigned char g_sub = (currBottom.g < currTop.g) ? 0 : currBottom.g - currTop.g;
         unsigned char b_sub = (currBottom.b < currTop.b) ? 0 : currBottom.b - currTop.b;
@@ -105,31 +105,23 @@ Image subtractMode(const Image &topLayer, const Image &bottomLayer)
     return result;
 }
 
-/**
- * @brief Common mathematical addition. Add to the top layer the passed in values
- *
- * @param topLayer The top layer image
- * @param r The red channel value
- * @param g The green channel value
- * @param b The blue channel value
- * @return Image
- */
-Image Add(Image &topLayer, double r, double g, double b)
+Image add(const Image &topLayer, double r, double g, double b)
 {
-    Image image = topLayer;
+    Image result = topLayer;
+
     for (int i = 0; i < topLayer.pixels.size(); ++i)
     {
-        // Get current pixels
-        Pixel currTop = topLayer.pixels.at(i);
+        const Pixel &currTop = topLayer.pixels[i];
 
-        // Add values, if overflow occurs clamp to 255 (sum > 255)
+        // Pixel-wise addition (clamp to 255 to prevent overflow)
         unsigned char r_add = (0xFF - r < currTop.r) ? 0xFF : r + currTop.r;
         unsigned char g_add = (0xFF - g < currTop.g) ? 0xFF : g + currTop.g;
         unsigned char b_add = (0xFF - b < currTop.b) ? 0xFF : b + currTop.b;
-        image.pixels.at(i).update(r_add, g_add, b_add);
+
+        result.pixels[i].update(r_add, g_add, b_add);
     }
 
-    return image;
+    return result;
 }
 
 /**

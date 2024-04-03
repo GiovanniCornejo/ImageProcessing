@@ -33,7 +33,14 @@ Image overlayMode(const Image &foreground, const Image &background);
 /// @return The subtracted image.
 Image subtractMode(const Image &topLayer, const Image &bottomLayer);
 
-Image Add(Image &topLayer, double r = 1.0, double g = 1.0, double b = 1.0);
+/// @brief Common mathematical addition. Add to the top layer the passed in values.
+/// @param topLayer The top layer image.
+/// @param r The red byte value.
+/// @param g The green byte value.
+/// @param b The blue byte value.
+/// @return The added image.
+Image add(const Image &topLayer, double r = 1.0, double g = 1.0, double b = 1.0);
+
 Image Scale(Image &topLayer, double r = 1.0, double g = 1.0, double b = 1.0);
 
 Image ColorRed(Image &topLayer);
